@@ -44,6 +44,7 @@ def main():
     for line in Lines: 
         filename = line.strip()+".mkv"
         print(str(count) + " Starting for " + filename) 
+        count = count + 1
 
         #find file_id from filename
         page_token = None
@@ -80,7 +81,8 @@ def main():
                                 resumable=True)
         file = service.files().create(body=file_metadata,
                                             media_body=media,
-                                            fields='id').execute()
+                                            fields='id',
+                                            supportsAllDrives=True).execute()
 
         print("Upload completed")
 
@@ -94,3 +96,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
