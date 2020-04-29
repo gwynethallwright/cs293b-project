@@ -1,5 +1,7 @@
 import cv2
+from keras.preprocessing import image
 import os
+import numpy as np
 
 def set_working_dir(path):
   if os.getcwd() != path:
@@ -31,7 +33,18 @@ def extract_frames_all(read_directory_name, write_directory_name):
   for filename in os.listdir(read_directory_name):
     extract_frames(read_directory_name + "/" + filename, filename, write_directory_name)
 
+def read_training_data(base_directory_name, training_set):
+  for directory in os.listdir(base_directory_name):
+    for filename in os.listdir(base_directory_name + "/" + directory):
+      train_image = image.load_img(base_directory_name + "/" + directory + "/" + filename, target_size=(224,224,3))
+      train_image = image.img_to_array(train_image)
+      train_image = train_image/255
+      training_set.append(train_image)
+
 ## if __name__ == '__main__':
 ##    set_working_dir("/content/drive/Shared drives/farmcam_human_detection")
 ##    extract_frames_all("contains_human", "contains_human_extracted")
 ##    extract_frames_all("human_less", "human_less_extracted")
+##    training_set = []
+##    read_training_data("contains_human_extracted", training_set)
+##    x_training_data = np.array(training_set)
