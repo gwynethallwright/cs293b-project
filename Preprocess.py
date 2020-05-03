@@ -2,11 +2,6 @@ import cv2
 from keras.preprocessing import image
 import os
 import numpy as np
-
-import cv2
-from keras.preprocessing import image
-import os
-import numpy as np
 from sklearn.model_selection import train_test_split
 
 def set_working_dir(path):
@@ -22,18 +17,31 @@ def check_create_dirs(outer_dir, inner_dir):
 def generate_filepath(writefile_prefix, directory, frame_number):
     return directory + "/" + writefile_prefix[:-4] + "/" + writefile_prefix[:-4] + "_%d.png" % frame_number
 
-def extract_frames(readfile, writefile_prefix, directory, resize=True, x_dim=224, y_dim=224):
+def extract_frames(readfile, writefile_prefix, directory, num_frames_to_save=15, resize=True, x_dim=224, y_dim=224):
     video = cv2.VideoCapture(readfile)
+    num_frames = video.get(cv2.CAP_PROP_FRAME_COUNT) # Get number of frames in video
+    if num_frames < num_frames_to_save: # Reject if not enough frames
+      print("File \"" + readfile + "\" has only " + str(num_frames) + " frames. Discarding.")
+      return -1
+    factor = num_frames//num_frames_to_save
     success, image = video.read()
     frame_number = 0
+    num_frames_saved = 0
     check_create_dirs(directory, writefile_prefix[:-4])
     while success:
+      if (frame_number%factor) == 0:
+        # Resize and write image
         if resize:
-            image = cv2.resize(image, (x_dim, y_dim))
+          image = cv2.resize(image, (x_dim, y_dim))
         cv2.imwrite(generate_filepath(writefile_prefix, directory, frame_number), image)
-        success, image = video.read()
-        frame_number += 1
-    return frame_number + 1
+        num_frames_saved += 1
+        # Check if we have saved enough frames
+        if (num_frames_saved + 1) == num_frames_to_save:
+          return
+      # Get next frame
+      success, image = video.read()
+      frame_number += 1
+    return
 
 def extract_frames_all(read_directory_name, write_directory_name):
   for filename in os.listdir(read_directory_name):
@@ -63,8 +71,8 @@ def get_data_and_labels(directory_1="contains_human_extracted", directory_2="hum
   return train_test_split(full_data_set, labels, test_size=0.25, stratify=labels, random_state=42)
 
 
-## if __name__ == '__main__':
-##    set_working_dir("/content/drive/Shared drives/farmcam_human_detection")
-##    extract_frames_all("contains_human", "contains_human_extracted")
-##    extract_frames_all("human_less", "human_less_extracted")
-##    (x_train, x_test, y_train, y_test) = get_data_and_labels()
+if __name__ == '__main__':
+  set_working_dir(".")
+  extract_frames_all("contains_human", "contains_human_extracted")
+  extract_frames_all("human_less", "human_less_extracted")
+  (x_train, x_test, y_train, y_test) = get_data_and_labels()
