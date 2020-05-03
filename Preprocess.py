@@ -68,8 +68,12 @@ def get_data_and_labels(directory_1="contains_human_extracted", directory_2="hum
   num_with_humans = read_training_data(directory_1, training_set, labels)
   num_without_humans = read_training_data(directory_2, training_set, labels, False)
   full_data_set = np.array(training_set)
-  return train_test_split(full_data_set, labels, test_size=0.25, stratify=labels, random_state=42)
-
+  (x_train, x_test, y_train, y_test) = train_test_split(full_data_set, labels, test_size=0.25, stratify=labels, random_state=42)
+  x_train = np.array(x_train)
+  y_train = np.array(y_train)
+  x_test = np.array(x_test)
+  y_test = np.array(y_test)
+  return (x_train, x_test, y_train, y_test)
 
 if __name__ == '__main__':
   set_working_dir(".")
