@@ -1,0 +1,9 @@
+to ssh into the instance:
+ssh -i farm_4.pem ubuntu@169.231.235.107
+
+To mount a volume:
+mkdir volume
+sudo mount /dev/vdb ./volume
+
+reference-
+https://github.com/naturalis/openstack-docs/wiki/Howto:-Creating-and-using-Volumes-on-a-Linux-instance
