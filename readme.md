@@ -15,7 +15,9 @@ Usage : python3 drive_mover.py <output_directory_id>
 #### Machine Learning Script
 - For Eucalyptus: `sudo apt-get install libsm6 libxrender1 libfontconfig1`
 - `python3 -m pip install --no-cache-dir requirements.txt`
-- `python3 -W ignore train.py --path [PATH]`, where PATH is the path to a directory that contains directories named `contains_human` and `human_less`.
+- `python3 -W ignore train.py --path [PATH] --extract [EXTRACT]`.
+	- PATH is the path to a directory that contains directories named `contains_human` and `human_less`. Default: current working directory.
+	- EXTRACT is a boolean that stipulates whether or not video frame extraction should be performed (it might already have been performed). Default: True.
 
 ### Team Members
 Gwyneth Allwright, Swaroop Rao and Sabrina Tsui. This is our project for CS293B Cloud Computing (Spring 2020) at UCSB.

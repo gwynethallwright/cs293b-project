@@ -13,13 +13,14 @@ from keras.layers.core import Dense
 def parse_cmd_line():
   parser = argparse.ArgumentParser(add_help=False)
   parser.add_argument('--path', type=str, default=None)
+  parser.add_argument('--extract', type=bool, default=True)
   args = parser.parse_args()
   parse_success = True
   if args.path:
     if not os.path.isdir(args.path):
       print("Your --path does not represent a valid directory. Aborting.")
       parse_success = False
-  return [parse_success, args.path]
+  return [parse_success, args.path, args.extract]
 
 def check_create_dirs(outer_dir, inner_dir):
     if not os.path.exists(outer_dir):
@@ -106,13 +107,14 @@ def get_model():
   return model
 
 if __name__ == '__main__':
-  [status, path] = parse_cmd_line()
+  [status, path, perform_extraction] = parse_cmd_line()
   if status:
     if path:
       os.chdir(path)
-    extract_frames_all("contains_human", "contains_human_extracted")
-    extract_frames_all("human_less", "human_less_extracted")
-    print("Video frames successfully extracted.")
+    if perform_extraction:
+      extract_frames_all("contains_human", "contains_human_extracted")
+      extract_frames_all("human_less", "human_less_extracted")
+      print("Video frames successfully extracted.")
     (x_train, x_test, y_train, y_test) = get_data_and_labels()
     print("Train and test data read.")
     lstm_model = get_model()
