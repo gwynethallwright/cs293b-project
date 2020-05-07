@@ -1,6 +1,7 @@
 import cv2
 from keras.preprocessing import image
 import os
+import argparse
 import numpy as np
 from sklearn.model_selection import train_test_split
 from keras.layers import LSTM
@@ -9,9 +10,16 @@ from keras.layers.convolutional import Conv2D
 from keras.layers.core import Dropout
 from keras.layers.core import Dense
 
-def set_working_dir(path):
-  if os.getcwd() != path:
-    os.chdir(path)
+def parse_cmd_line():
+  parser = argparse.ArgumentParser(add_help=False)
+  parser.add_argument('--path', type=str, default=None)
+  args = parser.parse_args()
+  parse_success = True
+  if args.path:
+    if not os.path.isdir(args.path):
+      print("Your --path does not represent a valid directory. Aborting.")
+      parse_success = False
+  return [parse_success, args.path]
 
 def check_create_dirs(outer_dir, inner_dir):
     if not os.path.exists(outer_dir):
@@ -98,13 +106,16 @@ def get_model():
   return model
 
 if __name__ == '__main__':
-  set_working_dir(".")
-  extract_frames_all("contains_human", "contains_human_extracted")
-  extract_frames_all("human_less", "human_less_extracted")
-  print("Video frames successfully extracted.")
-  (x_train, x_test, y_train, y_test) = get_data_and_labels()
-  print("Train and test data read.")
-  lstm_model = get_model()
-  print("Model generated.")
-  lstm_model.fit(x_train, y_train, epochs=5, validation_data=(x_test, y_test))
-  print("Training complete.")
+  [status, path] = parse_cmd_line()
+  if status:
+    if path:
+      os.chdir(path)
+    extract_frames_all("contains_human", "contains_human_extracted")
+    extract_frames_all("human_less", "human_less_extracted")
+    print("Video frames successfully extracted.")
+    (x_train, x_test, y_train, y_test) = get_data_and_labels()
+    print("Train and test data read.")
+    lstm_model = get_model()
+    print("Model generated.")
+    lstm_model.fit(x_train, y_train, epochs=5, validation_data=(x_test, y_test))
+    print("Training complete.")
