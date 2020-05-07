@@ -7,3 +7,7 @@ sudo mount /dev/vdb ./volume
 
 reference-
 https://github.com/naturalis/openstack-docs/wiki/Howto:-Creating-and-using-Volumes-on-a-Linux-instance
+
+Unzipping files:
+sudo apt install unzip
+unzip massive_directory

@@ -15,7 +15,7 @@ Usage : python3 drive_mover.py <output_directory_id>
 #### Machine Learning Script
 - `sudo apt-get install libsm6 libxrender1 libfontconfig1`
 - `python3 -m pip install --no-cache-dir requirements.txt`
-- 'python3 train.py'
+- `python3 train.py`
 
 ### Team Members
 Gwyneth Allwright, Swaroop Rao and Sabrina Tsui. This is our project for CS293B Cloud Computing (Spring 2020) at UCSB.
