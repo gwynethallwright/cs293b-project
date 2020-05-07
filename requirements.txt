@@ -1,0 +1,5 @@
+opencv-python
+keras == 2.1.5
+tensorflow == 1.5
+numpy
+sklearn
