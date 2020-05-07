@@ -13,14 +13,16 @@ from keras.layers.core import Dense
 def parse_cmd_line():
   parser = argparse.ArgumentParser(add_help=False)
   parser.add_argument('--path', type=str, default=None)
-  parser.add_argument('--extract', type=bool, default=True)
+  parser.add_argument('--extract', type=int, default=1)
   args = parser.parse_args()
-  parse_success = True
   if args.path:
     if not os.path.isdir(args.path):
       print("Your --path does not represent a valid directory. Aborting.")
-      parse_success = False
-  return [parse_success, args.path, args.extract]
+      return [False, args.path, args.extract]
+  if (args.extract != 0) & (args.extract != 1):
+    print("Please use either 0 or 1 for the --extract argument. Aborting.")
+    return [False, args.path, args.extract]
+  return [True, args.path, args.extract]
 
 def check_create_dirs(outer_dir, inner_dir):
     if not os.path.exists(outer_dir):
@@ -111,7 +113,7 @@ if __name__ == '__main__':
   if status:
     if path:
       os.chdir(path)
-    if perform_extraction:
+    if perform_extraction == 1:
       extract_frames_all("contains_human", "contains_human_extracted")
       extract_frames_all("human_less", "human_less_extracted")
       print("Video frames successfully extracted.")

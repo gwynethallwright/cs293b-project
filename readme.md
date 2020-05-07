@@ -17,7 +17,7 @@ Usage : python3 drive_mover.py <output_directory_id>
 - `python3 -m pip install --no-cache-dir requirements.txt`
 - `python3 -W ignore train.py --path [PATH] --extract [EXTRACT]`.
 	- PATH is the path to a directory that contains directories named `contains_human` and `human_less`. Default: current working directory.
-	- EXTRACT is a boolean that stipulates whether or not video frame extraction should be performed (it might already have been performed). Default: True.
+	- EXTRACT is an integer (0 or 1) that stipulates whether or not video frame extraction should be performed (it might already have been performed). Default: 1 (perform extraction).
 
 ### Team Members
 Gwyneth Allwright, Swaroop Rao and Sabrina Tsui. This is our project for CS293B Cloud Computing (Spring 2020) at UCSB.
