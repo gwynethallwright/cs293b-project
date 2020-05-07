@@ -52,7 +52,8 @@ def extract_frames_all(read_directory_name, write_directory_name):
   for filename in os.listdir(read_directory_name):
     extract_frames(read_directory_name + "/" + filename, filename, write_directory_name)
 
-def read_training_data(base_directory_name, training_set, labels, contains_humans = True):
+def read_training_data(base_directory_name, training_set, labels, contains_humans = True, num_sets_to_read = None):
+  num_sets_read = 0
   for directory in os.listdir(base_directory_name):
     frames_of_video = []
     for filename in os.listdir(base_directory_name + "/" + directory):
@@ -66,13 +67,19 @@ def read_training_data(base_directory_name, training_set, labels, contains_human
     else:
       labels.append([0,1])
     training_set.append(frames_of_video)
+    num_sets_read += 1
+    if num_sets_to_read:
+      if num_sets_to_read == num_sets_read:
+        print(str(num_sets_read) + " videos have been read.")
+        return
+  print(str(num_sets_read) + " videos have been read.")
   return
 
 def get_data_and_labels(directory_1="contains_human_extracted", directory_2="human_less_extracted"):
   training_set = []
   labels = []
-  read_training_data(directory_1, training_set, labels)
-  read_training_data(directory_2, training_set, labels, False)
+  read_training_data(directory_1, training_set, labels, True, 5)
+  read_training_data(directory_2, training_set, labels, False, 5)
   full_data_set = np.array(training_set)
   (x_train, x_test, y_train, y_test) = train_test_split(full_data_set, labels, test_size=0.25, stratify=labels, random_state=42)
   x_train = np.array(x_train)
