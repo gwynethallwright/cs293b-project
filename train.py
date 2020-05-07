@@ -33,7 +33,7 @@ def check_create_dirs(outer_dir, inner_dir):
 def generate_filepath(writefile_prefix, directory, frame_number):
     return directory + "/" + writefile_prefix[:-4] + "/" + writefile_prefix[:-4] + "_%d.png" % frame_number
 
-def extract_frames(readfile, writefile_prefix, directory, num_frames_to_save=15, resize=True, x_dim=224, y_dim=224):
+def extract_frames(readfile, writefile_prefix, directory, num_frames_to_save=15, resize=True, x_dim=50, y_dim=50):
     video = cv2.VideoCapture(readfile)
     num_frames = video.get(cv2.CAP_PROP_FRAME_COUNT) # Get number of frames in video
     if num_frames < num_frames_to_save: # Reject if not enough frames
@@ -68,7 +68,7 @@ def read_training_data(base_directory_name, training_set, labels, contains_human
   for directory in os.listdir(base_directory_name):
     frames_of_video = []
     for filename in os.listdir(base_directory_name + "/" + directory):
-      train_image = image.load_img(base_directory_name + "/" + directory + "/" + filename, target_size=(224,224,3))
+      train_image = image.load_img(base_directory_name + "/" + directory + "/" + filename, target_size=(50,50,3))
       train_image = image.img_to_array(train_image)
       train_image = train_image/255
       train_image = train_image.flatten()
@@ -89,8 +89,8 @@ def read_training_data(base_directory_name, training_set, labels, contains_human
 def get_data_and_labels(directory_1="contains_human_extracted", directory_2="human_less_extracted"):
   training_set = []
   labels = []
-  read_training_data(directory_1, training_set, labels, True, 5)
-  read_training_data(directory_2, training_set, labels, False, 5)
+  read_training_data(directory_1, training_set, labels, True, 50)
+  read_training_data(directory_2, training_set, labels, False, 50)
   full_data_set = np.array(training_set)
   (x_train, x_test, y_train, y_test) = train_test_split(full_data_set, labels, test_size=0.25, stratify=labels, random_state=42)
   x_train = np.array(x_train)
@@ -101,7 +101,7 @@ def get_data_and_labels(directory_1="contains_human_extracted", directory_2="hum
 
 def get_model():
   model = Sequential()
-  model.add(LSTM(100, input_shape=(15, 224*224*3)))
+  model.add(LSTM(100, input_shape=(15, 50*50*3)))
   model.add(Dropout(0.5))
   model.add(Dense(100, activation='relu'))
   model.add(Dense(2, activation='softmax'))
@@ -121,5 +121,5 @@ if __name__ == '__main__':
     print("Train and test data read.")
     lstm_model = get_model()
     print("Model generated.")
-    lstm_model.fit(x_train, y_train, epochs=5, validation_data=(x_test, y_test))
+    lstm_model.fit(x_train, y_train, epochs=5, batch_size=2, validation_data=(x_test, y_test))
     print("Training complete.")
