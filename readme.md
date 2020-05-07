@@ -13,8 +13,8 @@ Requirements : <br/>
 Usage : python3 drive_mover.py <output_directory_id>
 
 #### Machine Learning Script
-- For Eucalyptus: `sudo apt-get install libsm6 libxrender1 libfontconfig1`
-- `python3 -m pip install --no-cache-dir requirements.txt`
+  For Eucalyptus: `sudo apt-get install libsm6 libxrender1 libfontconfig1`
+- `python3 -m pip install --no-cache-dir -r requirements.txt`
 - `python3 -W ignore train.py --path [PATH] --extract [EXTRACT]`.
 	- PATH is the path to a directory that contains directories named `contains_human` and `human_less`. Default: current working directory.
 	- EXTRACT is an integer (0 or 1) that stipulates whether or not video frame extraction should be performed (it might already have been performed). Default: 1 (perform extraction).
