@@ -12,6 +12,16 @@ Requirements : <br/>
 
 Usage : python3 drive_mover.py <output_directory_id>
 
+#### Startup Script
+  To be run after booting up a new instance(installs docker, mounts a drive at /dev/vdc, and runs a docker container with jupyter, tensorflow and keras.
+  - chmod +x startup.sh
+  - ./startup.sh
+
+#### Connect to Jupyter Notebook  
+  To connect to the remote Jupyter notebook server. Port forwarding to the remote server
+  - nohup ssh -N -f -L localhost:8888:localhost:8888 -i farm_4.pem ubuntu@(IP of remote server)
+  Open localhost:8888 on your browser
+ 
 #### Machine Learning Script
   For Eucalyptus: `sudo apt-get install libsm6 libxrender1 libfontconfig1`
 - `python3 -m pip install --no-cache-dir -r requirements.txt`
