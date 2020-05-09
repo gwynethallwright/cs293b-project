@@ -23,11 +23,13 @@ Usage : python3 drive_mover.py <output_directory_id>
   Open localhost:8888 on your browser
  
 #### Machine Learning Script
-  For Eucalyptus: `sudo apt-get install libsm6 libxrender1 libfontconfig1`
-- `python3 -m pip install --no-cache-dir -r requirements.txt`
-- `python3 -W ignore train.py --path [PATH] --extract [EXTRACT]`.
+- Requirements: `python3 -m pip install --no-cache-dir -r requirements.txt`
+- `python3 -W ignore train.py [--path PATH] [--extract EXTRACT] [--frames FRAMES] [--videos VIDEOS] [--xdim XDIM] [--ydim YDIM]`.
 	- PATH is the path to a directory that contains directories named `contains_human` and `human_less`. Default: current working directory.
 	- EXTRACT is an integer (0 or 1) that stipulates whether or not video frame extraction should be performed (it might already have been performed). Default: 1 (perform extraction).
+	- FRAMES is an integer that represents the number of frames per video to extract. Default: extract 15 frames.
+	- VIDEOS is an integer that can be used to restrict the number of videos to use from each of `contains_human` and `human_less`. Default: use all videos.
+	- XDIM and YDIM are integers that represent the dimensions of the resized video frames. Default: 50 x 50.
 
 ### Team Members
 Gwyneth Allwright, Swaroop Rao and Sabrina Tsui. This is our project for CS293B Cloud Computing (Spring 2020) at UCSB.

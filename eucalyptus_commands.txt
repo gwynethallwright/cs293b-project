@@ -18,6 +18,8 @@ pip:
 -sudo apt install python3-pip
 -<if 404 errors: sudo apt-get update>
 
+sudo apt-get install libsm6 libxrender1 libfontconfig1
+
 fix locale error:
 export LC_ALL="en_US.UTF-8"
 export LC_CTYPE="en_US.UTF-8"
