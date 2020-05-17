@@ -1,0 +1,4 @@
+Pillow
+opencv-python
+tensorflow == 1.5
+numpy
