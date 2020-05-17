@@ -33,20 +33,20 @@ Usage : python3 drive_mover.py <output_directory_id>
 
 #### Running InceptionV2 Trained model
 - Startup Script(Install pip3, tensorflow, opencv, and mounts the volume)
-	chmod +x startup.sh
-	./startup.sh
+	- chmod +x startup.sh
+	- ./startup.sh
 - Download the pre-trained model
-	wget http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz
-	tar -xvzf faster_rcnn_inception_v2_coco_2018_01_28.tar.gz
+	- wget http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz
+	- tar -xvzf faster_rcnn_inception_v2_coco_2018_01_28.tar.gz
 - Modify variables
-	threshold - percent of human within a frame
-	humanCountThreshold - number of frames in the video that should contain humans
-	videos_path - directory path which contains the videos
-	model_path - verify model_path points to the downloaded and extracted model from above step
+	- threshold - percent of human within a frame
+	- humanCountThreshold - number of frames in the video that should contain humans
+	- videos_path - directory path which contains the videos
+	- model_path - verify model_path points to the downloaded and extracted model from above step
 - Running script
-	python3 detect_human.py
+	- python3 detect_human.py
 - Output
-	A text file with filename of the video and 1/0 representing whether human was detected or not.
+	- A text file with filename of the video and 1/0 representing whether human was detected or not.- 
 
 ### Team Members
 Gwyneth Allwright, Swaroop Rao and Sabrina Tsui. This is our project for CS293B Cloud Computing (Spring 2020) at UCSB.
