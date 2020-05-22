@@ -67,23 +67,26 @@ if __name__ == "__main__":
     odapi = DetectorAPI(path_to_ckpt=model_path)
     threshold = 0.7
     humanCountThreshold = 5
-    x_dim = 160
-    y_dim = 90
+    x_dim = 1280
+    y_dim = 720
+    skip_frames = 5
     videos_path = "/home/ubuntu/videos/combined/"
     filenames = os.listdir(videos_path)
     fileCount = 1
-    out_file = open("out_file_" + str(x_dim) + "_" + str(y_dim) + ".txt", "a")
+    out_file = open("out_file_" + str(x_dim) + "_" + str(y_dim) + "_" + str(skip_frames) + ".txt", "a")
     time_list = []
     for filename in filenames:
         start_time = time.perf_counter()
         print(str(fileCount)+" : Started processing for "+filename)
         #fileCount = fileCount + 1
         cap = cv2.VideoCapture(videos_path+filename)
-        #cap.set(cv2.CAP_PROP_FPS, 2)
         humanCount = 0
         fileCount = fileCount+1
+        frame_num = 0
         while True:
+
             r, img = cap.read()
+
             if r==False:
                 out_file.write(filename + " : 0\n")
                 print("Human not found in "+filename)
@@ -92,32 +95,33 @@ if __name__ == "__main__":
                 out_file.write(str(end_time - start_time) + "\n")
                 time_list.append(end_time - start_time)
                 break
-            img = cv2.resize(img, (x_dim, y_dim))
-            # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-            # img = cv2.resize(img, (480, 320))
-            boxes, scores, classes, num = odapi.processFrame(img)
 
-            # Visualization of the results of a detection.
+            if (frame_num % skip_frames) == 0:
 
-            for i in range(len(boxes)):
-                # Class 1 represents human
-                if classes[i] == 1 and scores[i] > threshold:
-                    box = boxes[i]
-                    humanCount = humanCount+1
+                img = cv2.resize(img, (x_dim, y_dim))
+                boxes, scores, classes, num = odapi.processFrame(img)
 
-            #cv2.imshow("preview", img)
-            if humanCount > humanCountThreshold:
-                out_file.write(filename + " : 1\n")
-                print("Human found in "+filename)
-                end_time = time.perf_counter()
-                print(end_time - start_time)
-                time_list.append(end_time - start_time)
-                out_file.write(str(end_time - start_time) + "\n")
-                # Invoke alert script here
-                break
-            key = cv2.waitKey(1)
-            if key & 0xFF == ord('q'):
-                break
+                # Visualization of the results of a detection.
+
+                for i in range(len(boxes)):
+                    # Class 1 represents human
+                    if classes[i] == 1 and scores[i] > threshold:
+                        box = boxes[i]
+                        humanCount = humanCount+1
+
+                #cv2.imshow("preview", img)
+                if humanCount > humanCountThreshold:
+                    out_file.write(filename + " : 1\n")
+                    print("Human found in "+filename)
+                    end_time = time.perf_counter()
+                    print(end_time - start_time)
+                    time_list.append(end_time - start_time)
+                    out_file.write(str(end_time - start_time) + "\n")
+                    # Invoke alert script here
+                    break
+
+            frame_num = frame_num + 1
+
     time_list = np.array(time_list)
     out_file.write("Mean:" + "\t" + str(np.mean(time_list)) + "\n")
     out_file.write("Max:" + "\t" + str(np.max(time_list)) + "\n")
@@ -125,4 +129,3 @@ if __name__ == "__main__":
     out_file.write("Total:" + "\t" + str(np.sum(time_list)) + "\n")
     out_file.write("Done")
     out_file.close()
-
