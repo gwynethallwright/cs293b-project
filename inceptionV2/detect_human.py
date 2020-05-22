@@ -63,19 +63,23 @@ class DetectorAPI:
         self.default_graph.close()
 
 if __name__ == "__main__":
-    model_path = './faster_rcnn_inception_v2_coco_2018_01_28/frozen_inference_graph.pb'
+    model_path = '/home/ubuntu/faster_rcnn_inception_v2_coco_2018_01_28/frozen_inference_graph.pb'
     odapi = DetectorAPI(path_to_ckpt=model_path)
     threshold = 0.7
     humanCountThreshold = 5
-    videos_path = "../volume/human_less_mega/"
+    x_dim = 160
+    y_dim = 90
+    videos_path = "/home/ubuntu/videos/combined/"
     filenames = os.listdir(videos_path)
     fileCount = 1
-    out_file = open("out_file.txt","a")
+    out_file = open("out_file_" + str(x_dim) + "_" + str(y_dim) + ".txt", "a")
+    time_list = []
     for filename in filenames:
-
+        start_time = time.perf_counter()
         print(str(fileCount)+" : Started processing for "+filename)
         #fileCount = fileCount + 1
         cap = cv2.VideoCapture(videos_path+filename)
+        #cap.set(cv2.CAP_PROP_FPS, 2)
         humanCount = 0
         fileCount = fileCount+1
         while True:
@@ -83,9 +87,14 @@ if __name__ == "__main__":
             if r==False:
                 out_file.write(filename + " : 0\n")
                 print("Human not found in "+filename)
+                end_time = time.perf_counter()
+                print(end_time - start_time)
+                out_file.write(str(end_time - start_time) + "\n")
+                time_list.append(end_time - start_time)
                 break
-            img = cv2.resize(img, (1280, 720))
-
+            img = cv2.resize(img, (x_dim, y_dim))
+            # img = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+            # img = cv2.resize(img, (480, 320))
             boxes, scores, classes, num = odapi.processFrame(img)
 
             # Visualization of the results of a detection.
@@ -100,10 +109,20 @@ if __name__ == "__main__":
             if humanCount > humanCountThreshold:
                 out_file.write(filename + " : 1\n")
                 print("Human found in "+filename)
+                end_time = time.perf_counter()
+                print(end_time - start_time)
+                time_list.append(end_time - start_time)
+                out_file.write(str(end_time - start_time) + "\n")
+                # Invoke alert script here
                 break
             key = cv2.waitKey(1)
             if key & 0xFF == ord('q'):
                 break
+    time_list = np.array(time_list)
+    out_file.write("Mean:" + "\t" + str(np.mean(time_list)) + "\n")
+    out_file.write("Max:" + "\t" + str(np.max(time_list)) + "\n")
+    out_file.write("Min:" + "\t" + str(np.min(time_list)) + "\n")
+    out_file.write("Total:" + "\t" + str(np.sum(time_list)) + "\n")
     out_file.write("Done")
     out_file.close()
 
