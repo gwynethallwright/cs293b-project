@@ -48,5 +48,11 @@ Usage : python3 drive_mover.py <output_directory_id>
 - Output
 	- A text file with filename of the video and 1/0 representing whether human was detected or not.- 
 
+#### Monitoring Script
+- Bash script for use on IoT device.
+- Extra requirements: `sudo apt-get inotify-tools`.
+- Usage: `monitor.sh [DIR]` to monitor a directory.
+- Executes Python classification script when a file with a .mkv extension is placed in DIR.
+
 ### Team Members
 Gwyneth Allwright, Swaroop Rao and Sabrina Tsui. This is our project for CS293B Cloud Computing (Spring 2020) at UCSB.
