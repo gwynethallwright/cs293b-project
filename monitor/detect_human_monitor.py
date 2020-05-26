@@ -2,16 +2,47 @@
 # https://github.com/tensorflow/models/blob/master/research/object_detection/object_detection_tutorial.ipynb
 # Tensorflow Object Detection Detector
 import os
+import sys
 import numpy as np
-import tensorflow as tf
+#import tensorflow as tf
+import tensorflow.compat.v1 as tf
 import cv2
 import argparse
+import smtplib
+
+tf.disable_v2_behavior()
 
 def parse_command_line():
     parser = argparse.ArgumentParser(add_help=False)
     parser.add_argument('--path', type=str, default=None, required=True)
     args = parser.parse_args()
     return args.path
+
+def alert_user(filename):
+
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+
+    server.ehlo()
+    server.starttls()
+
+    myEmail = "farmCamAlert293@gmail.com"
+    myEmailPass = "richisawesome"
+    destEmail = "gwynethallwright@gmail.com"
+
+    #log in to the server using user provided credentials
+    server.login(myEmail, myEmailPass)
+
+    #Send the mail
+    subject = "Human detected"
+    body = "The device has detected human activity in video " + filename + "."
+    message = ("From: %s\r\n" % myEmail
+             + "To: %s\r\n" % destEmail
+             + "Subject: %s\r\n" % subject
+             + "\r\n"
+             + body)
+    server.sendmail(myEmail, destEmail, message)
+
+    server.close()
 
 class DetectorAPI:
     def __init__(self, path_to_ckpt):
@@ -62,16 +93,22 @@ class DetectorAPI:
 
 if __name__ == "__main__":
     filename = parse_command_line()
-    model_path = '/home/ubuntu/faster_rcnn_inception_v2_coco_2018_01_28/frozen_inference_graph.pb'
+    model_path = '/home/ubuntu/ssd_mobilenet_v1_coco_2018_01_28/frozen_inference_graph.pb'
     odapi = DetectorAPI(path_to_ckpt=model_path)
-    threshold = 0.7
-    humanCountThreshold = 5
+    threshold = 0.4
+    humanCountThreshold = 2
     x_dim = 1280
     y_dim = 720
-    skip_frames = 5
-    videos_path = "/home/ubuntu/videos/combined/"
+    skip_frames = 1
+    videos_path = "./"
     print("Started processing for " + filename)
     cap = cv2.VideoCapture(videos_path + filename)
+    num_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
+    #fps = cap.get(cv2.CAP_PROP_FPS)    
+    #duration = num_frames/fps
+    if num_frames <= 0 :
+        print("Video could not be read.")
+        sys.exit()
     humanCount = 0
     frame_num = 0
     while True:
@@ -81,7 +118,8 @@ if __name__ == "__main__":
             print("Human not found in "+filename)
             break
 
-        if (frame_num % skip_frames) == 0:
+        if True: 
+        #(frame_num % skip_frames) == 0:
 
             img = cv2.resize(img, (x_dim, y_dim))
             boxes, scores, classes, num = odapi.processFrame(img)
@@ -93,8 +131,7 @@ if __name__ == "__main__":
 
             if humanCount > humanCountThreshold:
                 print("Human found in "+filename)
-                # Invoke alert script here
+                alert_user(filename)
                 break
 
         frame_num = frame_num + 1
-
