@@ -117,8 +117,9 @@ if __name__ == "__main__":
             # Class 1 represents human
             if classes[i] == 1 and scores[i] > threshold:
                 humanCount = humanCount+1
+                break
 
-            if humanCount > humanCountThreshold:
-                print("Human found in "+filename)
-                alert_user(filename)
-                sys.exit()
+        if humanCount > humanCountThreshold:
+            print("Human found in "+filename)
+            alert_user(filename)
+            sys.exit()
