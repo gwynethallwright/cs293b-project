@@ -14,6 +14,7 @@ We use TensorFlow to classify videos from [UCSB's Edible Campus program](https:/
 - Download the pre-trained model:
 	- wget http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz
 	- tar -xvzf faster_rcnn_inception_v2_coco_2018_01_28.tar.gz
+  - Also available [here](models/ssd_mobilenet_v1_coco_2018_01_28) (the important component is the frozen inference graph).
 - Modify variables in `detect_human_monitor.py`:
 	- `threshold` - percent of human within a frame.
 	- `humanCountThreshold` - number of frames in the video that should contain humans.
