@@ -4,7 +4,7 @@ DIR=$1
 contains_humans_dir='/home/ubuntu/videos/demo_contains_humans'
 human_less_dir='/home/ubuntu/videos/demo_human_less'
 simulate_dir='/home/ubuntu/cs293b-project/monitor/'$DIR
-i=0
+i=1
 
 while [ $i -le 10 ]
    do
