@@ -1,6 +1,6 @@
 Pillow
 opencv-python
 keras == 2.1.5
-tensorflow == 1.5
+tensorflow == 2.5.3
 numpy
 sklearn
