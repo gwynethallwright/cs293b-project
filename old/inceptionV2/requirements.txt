@@ -1,4 +1,4 @@
 Pillow
 opencv-python
-tensorflow == 1.5
+tensorflow == 2.9.3
 numpy
